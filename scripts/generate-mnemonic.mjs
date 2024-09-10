@@ -26,6 +26,7 @@ const mnemonic = [
   "regular",
   "vicious",
 ];
+
 console.log("here");
 const generatedMnemonic = await Mnemonic.fromWords(mnemonic);
 console.log("there");
@@ -40,7 +41,8 @@ try {
   rootPrivateKeyNew3 =
     await generatedMnemonic.toStandardECDSAsecp256k1PrivateKey();
 
-  console.log(rootPrivateKeyNew3.toStringRaw());
+  console.log(rootPrivateKeyNew3.toStringDer());
+  console.log(rootPrivateKeyNew3.publicKey.toStringDer());
   console.log("finished");
 } catch (error) {
   console.log("Error generating rootPrivateKeyNew3:", error);

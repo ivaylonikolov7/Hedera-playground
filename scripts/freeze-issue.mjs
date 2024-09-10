@@ -4,6 +4,10 @@ import {
   PrivateKey,
   TopicMessageSubmitTransaction,
   TopicCreateTransaction,
+  AccountCreateTransaction,
+  Mnemonic,
+  Hbar,
+  HbarUnit,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -20,27 +24,22 @@ async function htsContractFunction() {
   );
   console.log("Client created successfully");
 
-  const nextMetricsMessage = "test";
-  const adminKey = PrivateKey.generateECDSA();
-
-  const newTopicTx = await new TopicCreateTransaction()
-    .setAdminKey(adminKey)
-    .freezeWith(client)
-    .sign(adminKey);
-
-  const newTopicResponse = await newTopicTx.execute(client);
-  const { topicId } = await newTopicResponse.getReceipt(client);
-
-  for (let i = 0; i < 10000; i++) {
-    await new TopicMessageSubmitTransaction()
-      .setTopicId(topicId)
-      .setMessage(JSON.stringify(nextMetricsMessage))
-      .freezeWith(client)
-      .sign(adminKey);
-    // (await topicMsgSubmitTx.execute(client)).getReceipt(client);
+  const accounts = [];
+  for (let accountIndex = 0; accountIndex < 1; ++accountIndex) {
+    const mnemonic = await Mnemonic.generate12();
+    const accountPrivateKeyObj =
+      await mnemonic.toStandardECDSAsecp256k1PrivateKeyCustomDerivationPath(
+        "",
+        `m/44'/60'/0'/0/${accountIndex}`
+      );
+    const accountPrivateKey = `0x${accountPrivateKeyObj.toStringRaw()}`;
+    const accountEvmAddress = `0x${accountPrivateKeyObj.publicKey.toEvmAddress()}`;
+    accounts[accountIndex] = {
+      privateKey: accountPrivateKey,
+      evmAddress: accountEvmAddress,
+      id: "",
+    };
   }
-
-  console.log("Finished sending messages");
 }
 
 void htsContractFunction();
