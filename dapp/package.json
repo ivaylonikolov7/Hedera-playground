@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "scripts": {
+    "build-vue": "vue-cli-service build --dest ./dist --formats 'umd' --watch --target lib --name dapp src/dapp.js",
+    "serve": "npx http-server@14.1.1 ./dist -c-1 -p 8222"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "2.50.0"
+  },
+  "devDependencies": {
+    "@vue/cli": "5.0.8",
+    "@vue/cli-plugin-babel": "5.0.8",
+    "@vue/cli-service": "5.0.8"
+  }
+}
